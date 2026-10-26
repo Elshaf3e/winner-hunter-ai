@@ -14,8 +14,8 @@ const normalizeAr = v => String(v||'').toLowerCase().normalize('NFD').replace(/[
 const url = u=>{try{let a=new URL(u);return ['https:','http:'].includes(a.protocol)?a.href:''}catch{return ''}};
 const grade=days => Number(days)>=200?'super':Number(days)>=50?'winner':'good';
 const gradeTitle=days=>Number(days)>=200?'🔥 Super Winner':Number(days)>=50?'🏆 Winner':'🌱 Good';
-const score=a=>Math.min(100,Math.round(Math.min(Number(a.days_active)||0,300)/300*78+Math.min(Math.max(Number(a.copies)||0,0),8)/8*22));
-const scoreExplanation='مؤشر استكشافي محسوب من مدة تشغيل الإعلان (78 نقطة) وعدد النسخ المسجلة (22 نقطة). لا يثبت مبيعات أو ROAS.';
+const score=a=>{const days=AdSpy.duration(a);return days===null?null:Math.min(100,Math.round(Math.min(days,300)/300*78+Math.min(Math.max(Number(a.copies)||0,0),8)/8*22))};
+const scoreExplanation='مؤشر إعلانات استكشافي منفصل عن نشاط تليجرام؛ 78 نقطة للأيام المرصودة و22 للنسخ المسجلة. لا يثبت مبيعات أو ROAS.';
 const palettes=[['#e1f7e9','#a6dbbb','💇'],['#e6efff','#bed3f6','🪒'],['#e7f1fb','#b5d5ee','🚘'],['#fff0ee','#ffc9bb','🌸'],['#e9f4ed','#bbdec3','🧽'],['#eaf5fc','#badaed','📱'],['#fff0dd','#ffd09a','🥗'],['#f9ecf9','#e3c3e8','💡']];
 const coverFor=(ad)=>{
  const title=(ad.title+' '+ad.category).toLowerCase();
@@ -138,7 +138,7 @@ function adCard(a){
  <div class="spy-body"><div class="badges"><span class="badge ${lev==='unverified'?'demo':lev}">${label}</span><span class="badge platform">${days===null?'المدة غير موثقة':days+' يوم مرصود'}</span><span class="badge ${a.is_demo?'demo':'good'}">${a.is_demo?'DEMO':'سجل أدخله المستخدم'}</span></div>
  <h3 class="ad-title">${e(a.title)}</h3><div class="spy-advertiser">${e(a.advertiser||'المعلن غير مذكور')}</div>
  <p class="spy-copy">${e(a.ad_text||'نص الإعلان غير متاح')}</p>
- <div class="spy-facts"><span>أول ظهور: ${e(a.first_seen||'غير معروف')}</span><span>آخر ظهور: ${e(a.last_seen||'غير معروف')}</span><span>النسخ المرصودة: ${a.copies?int(a.copies):'غير معروف'}</span><span>الوجهة: ${a.destination_type==='website'?'موقع':a.destination_type==='messages'?'رسائل':'غير معروفة'}</span><span>الحالة: ${a.status==='active'?'نشط حسب السجل':a.status==='inactive'?'غير نشط حسب السجل':'غير معروفة'}</span><span>جمع: ${e(a.collection_date||'غير معروف')}</span></div>${a.collections?.length?`<div class="spy-source">مجموعات: ${a.collections.map(e).join('، ')}</div>`:''}
+ <div class="spy-facts"><span>أول ظهور: ${e(a.first_seen||'غير معروف')}</span><span>آخر ظهور: ${e(a.last_seen||'غير معروف')}</span><span>النسخ المرصودة: ${a.copies?int(a.copies):'غير معروف'}</span><span>الوجهة: ${a.destination_type==='website'?'موقع':a.destination_type==='messages'?'رسائل':'غير معروفة'}</span><span>الحالة: ${a.status==='active'?'نشط حسب السجل':a.status==='inactive'?'غير نشط حسب السجل':'غير معروفة'}</span><span>جمع: ${e(a.collection_date||'غير معروف')}</span><span title="${e(scoreExplanation)}">Winner Score: ${score(a)===null?'غير متاح':score(a)+'/100'}</span></div>${a.collections?.length?`<div class="spy-source">مجموعات: ${a.collections.map(e).join('، ')}</div>`:''}
  <div class="spy-source">${url(a.ad_url)?`<a href="${e(url(a.ad_url))}" target="_blank" rel="noopener noreferrer">افتح مصدر الإعلان ↗</a>`:'رابط المصدر غير مضاف'}</div>
  <p class="spy-caveat">التصنيف حسب مدة مرصودة فقط؛ لا يثبت مبيعات أو ربح.</p></div>
  <div class="spy-actions">
