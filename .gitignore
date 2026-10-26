@@ -1,0 +1,8 @@
+node_modules/
+imports/
+telegram-exports/
+result.json
+*.session
+*.session-journal
+.env*
+test-results/
