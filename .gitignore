@@ -1,6 +1,8 @@
 node_modules/
 imports/
 telegram-exports/
+ad-exports/
+ad-media/
 result.json
 *.session
 *.session-journal
