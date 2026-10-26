@@ -279,7 +279,13 @@ Object.assign(pageTitles,{research:'مركز البحث المجاني',sources:
 const supplierSources=[
  {name:'CrazyGift — كريزي جيفت',handle:'Crazy_Gift',category:'هدايا ومنتجات ترندي',notes:'الموسكي، القاهرة. القناة بتعلن بيع جملة فقط وليس بالقطعة؛ شروط الدروبشيبينج غير مؤكدة.',evidence:'https://t.me/s/Crazy_Gift',checked:'2026-10-26'},
  {name:'تجمع تجار ومستوردين ومصانع مصر',handle:'egyptbigmall',category:'دليل مصادر متنوع',notes:'دليل بينشر روابط تجار؛ كل تاجر محتاج مراجعة منفصلة. ليس موردًا واحدًا ولا ضمانًا لجودة التجار.',evidence:'https://t.me/s/egyptbigmall?before=23',checked:'2026-10-26'},
- {name:'دليل مصانع وتجار الملابس بمصر',handle:'gfdegy',category:'ملابس ومصانع',notes:'مصدر لاكتشاف مصانع وتجار الملابس. الأسعار والمخزون وخدمة الشحن تحتاج تأكيد من المورد.',evidence:'https://t.me/s/gfdegy?after=5199',checked:'2026-10-26'}
+ {name:'دليل مصانع وتجار الملابس بمصر',handle:'gfdegy',category:'ملابس ومصانع',notes:'مصدر لاكتشاف مصانع وتجار الملابس. الأسعار والمخزون وخدمة الشحن تحتاج تأكيد من المورد.',evidence:'https://t.me/s/gfdegy?after=5199',checked:'2026-10-26'},
+ {name:'القائد للاستيراد',handle:'elqaed_salah',category:'أدوات منزلية ومطبخ',notes:'يذكر البيع من أول قطعة عند تجميع الطلبات. تحقق من السعر الحالي والتوفر وشروط شحن الطلبات الفردية.',evidence:'https://t.me/elqaed_salah',checked:'2026-10-26'},
+ {name:'فدوريستا جملة',handle:'Fadwrista',category:'أدوات منزلية',notes:'سعر الجملة من أول قطعة بشروط معلنة في القناة. راجع متطلبات التعامل والشحن قبل الاعتماد على المصدر.',evidence:'https://t.me/s/Fadwrista',checked:'2026-10-26'},
+ {name:'شركة الطيار',handle:'TR_Eslam2025',category:'أدوات منزلية ولعب أطفال',notes:'يعلن البيع جملة بالدستة والكرتونة؛ ليس مورد دروبشيبنج بالقطعة حسب الوصف المنشور.',evidence:'https://t.me/TR_Eslam2025',checked:'2026-10-26'},
+ {name:'Trendfire',handle:'trendfire1',category:'أدوات منزلية بالجملة',notes:'يذكر البيع بالكرتونة فقط؛ تحقق من الحد الأدنى والشحن.',evidence:'https://t.me/trendfire1',checked:'2026-10-26'},
+ {name:'الطناوي',handle:'eltanawygroup',category:'أدوات منزلية',notes:'تظهر عروض بأسعار للقطعة وعدد قطع الكرتونة؛ تأكد من الحد الأدنى الفعلي للطلب.',evidence:'https://t.me/s/eltanawygroup',checked:'2026-10-26'},
+ {name:'Dr.Wear',handle:'drwear',category:'ملابس جملة',notes:'يعلن البيع جملة من أول قطعة. تحقق من الموديلات والتوافر وإمكانية تنفيذ طلبات دروبشيبنج.',evidence:'https://t.me/s/drwear',checked:'2026-10-26'}
 ];
 function researchPage(){
  return header('مركز البحث المجاني','ابدأ بحثك في مصر، وافتح نتائج المصادر الأصلية، وبعد المراجعة احفظ الفرصة هنا.')+
