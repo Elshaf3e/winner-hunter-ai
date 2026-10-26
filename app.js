@@ -1,7 +1,7 @@
 'use strict';
 
 const S = {
-  page:'dashboard', ads:[],suppliers:[],competitors:[],
+  page:'research', ads:[],suppliers:[],competitors:[],
   filters:{search:'',platform:'all',level:'all',sort:'days'},
   supplierSearch:'', searchSaved:false,
   calc:{selling_price:499,supplier_cost:235,shipping_cost:100,failed_delivery_cost:0,cod_fee:0,handling_per_order:0,delivery_rate:50,cpa_placed:65,target_profit_delivered:30},
@@ -119,7 +119,7 @@ async function api(path,opts={}){
 }
 function toast(msg,err=false){let el=document.createElement('div');el.className='toast'+(err?' error':'');el.textContent=msg;$('#toasts').appendChild(el);setTimeout(()=>el.remove(),4200)}
 async function reload(){const [ads,suppliers,competitors]=await Promise.all([api('/api/ads'),api('/api/suppliers'),api('/api/competitors')]);S.ads=ads.items;S.suppliers=suppliers.items;S.competitors=competitors.items}
-async function refresh(){await reload();render()}
+async function refresh(){await reload();go(S.page)}
 const pageTitles={dashboard:'نظرة عامة',ads:'مكتبة الإعلانات',winners:'منتجات Winner',suppliers:'الموردين',competitors:'المنافسين',saved:'المحفوظات',calculator:'حاسبة الأرباح',settings:'الإعدادات والربط'};
 function go(page){S.page=page;$('#crumb').textContent=pageTitles[page];document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.page===page));$('#sidebar').classList.remove('open');render();window.scrollTo({top:0,behavior:'smooth'})}
 function header(title,desc,action=''){return `<section class="heading-row"><div><div class="eyebrow">WINNER HUNTER AI / WEB MVP</div><h1 class="page-title">${title}</h1><div class="page-subtitle">${desc}</div></div>${action}</section>`}
@@ -210,11 +210,11 @@ function settingsPage(){return `${header('الإعدادات ومصادر الب
  <div class="setting-card"><span class="status-note">غير متصل</span><h3>Telegram Supplier Search</h3><p>المرحلة القادمة: Telethon بعد تسجيل دخول المستخدم بشكل آمن للقنوات المصرح له بمشاهدتها، وفهرسة الرسائل المتاحة.</p></div>
  <div class="setting-card"><span class="status-note">غير متصل</span><h3>AI Image Search</h3><p>البحث بالصور، والتشابه المرئي، واستخراج بيانات الكرييتف لسه محتاجين مصدر بيانات أو محرك بحث مناسب.</p></div>
  <div class="setting-card full-row"><div class="panel-title">ملاحظات خصوصية وأمان</div><p>نسخة الويب قابلة للنشر كصفحة ثابتة، لكن البيانات بتتحفظ في المتصفح الحالي فقط (Local Storage) ومش بتتنقل بين الأجهزة، ولا فيه حسابات أو قاعدة بيانات مشتركة. لو مسحت بيانات المتصفح، ممكن تخسر بياناتك؛ اعمل نسخة JSON باستمرار. ماتدخلش بيانات شخصية أو حساسة هنا. مشاركة البيانات بين مستخدمين تحتاج Backend آمن وتسجيل دخول.</p></div></div>`}
-function render(){let html={dashboard,ads:adsPage,winners:adsPage,saved:adsPage,suppliers:suppliersPage,competitors:competitorsPage,calculator:calculatorPage,settings:settingsPage}[S.page]();$('#content').innerHTML=html;if(S.page==='calculator'&&!S.calcResults)calculate()}
+function render(){let html={dashboard,ads:adsPage,winners:adsPage,saved:adsPage,suppliers:suppliersPage,competitors:competitorsPage,calculator:calculatorPage,settings:settingsPage,research:researchPage,sources:sourcesPage}[S.page]();$('#content').innerHTML=html;if(S.page==='calculator'&&!S.calcResults)calculate()}
 function closeModal(){$('#modalOverlay').classList.add('hidden');$('#modal').innerHTML=''}
 function modal(title,body,footer=''){$('#modalOverlay').classList.remove('hidden');$('#modal').innerHTML=`<div class="modal-head"><div class="modal-title" id="modalTitle">${title}</div><button type="button" class="close-modal" data-action="close" aria-label="إغلاق">×</button></div>${body}${footer?`<div class="modal-footer">${footer}</div>`:''}`}
 const formFields={
- ads:[['title','اسم المنتج / الإعلان','text',true],['advertiser','اسم المعلن','text'],['platform','المنصة','select:Meta|TikTok|Facebook|Instagram|Other'],['country','الدولة','text'],['category','التصنيف','text'],['days_active','أيام التشغيل','number'],['copies','عدد النسخ','number'],['ad_text','نص الإعلان','textarea'],['ad_url','رابط الإعلان','url'],['landing_url','رابط اللاندنج','url']],
+ ads:[['title','اسم المنتج / الإعلان','text',true],['advertiser','اسم المعلن','text'],['platform','المنصة','select:Meta|TikTok|Google|YouTube|Facebook|Instagram|Other'],['country','الدولة','text'],['category','التصنيف','text'],['days_active','أيام التشغيل','number'],['copies','عدد النسخ','number'],['ad_text','نص الإعلان','textarea'],['ad_url','رابط الإعلان','url'],['landing_url','رابط اللاندنج','url']],
  suppliers:[['product','اسم المنتج','text',true],['supplier_name','اسم المورد','text',true],['phone','رقم المورد','tel'],['price','سعر المنتج EGP','number'],['channel','اسم قناة Telegram','text'],['message_url','رابط رسالة تليجرام','url'],['notes','ملاحظات','textarea']],
  competitors:[['name','اسم المنافس','text',true],['platform','المنصة','select:Meta|TikTok|Facebook|Instagram|Other'],['page_url','رابط صفحة المنافس','url'],['notes','ملاحظات','textarea']]
 };
@@ -272,4 +272,38 @@ window.addEventListener('keydown',ev=>{if(ev.key==='Escape')closeModal();if(ev.k
 $('#topImport').onclick=()=>openImport();
 $('#mobileMenu').onclick=()=>$('#sidebar').classList.toggle('open');
 $('#modalOverlay').onclick=ev=>{if(ev.target===$('#modalOverlay'))closeModal()};
+
+
+// Free research workspace. External sources open on their own sites.
+Object.assign(pageTitles,{research:'مركز البحث المجاني',sources:'مصادر الموردين'});
+const supplierSources=[
+ {name:'CrazyGift — كريزي جيفت',handle:'Crazy_Gift',category:'هدايا ومنتجات ترندي',notes:'الموسكي، القاهرة. القناة بتعلن بيع جملة فقط وليس بالقطعة؛ شروط الدروبشيبينج غير مؤكدة.',evidence:'https://t.me/s/Crazy_Gift',checked:'2026-10-26'},
+ {name:'تجمع تجار ومستوردين ومصانع مصر',handle:'egyptbigmall',category:'دليل مصادر متنوع',notes:'دليل بينشر روابط تجار؛ كل تاجر محتاج مراجعة منفصلة. ليس موردًا واحدًا ولا ضمانًا لجودة التجار.',evidence:'https://t.me/s/egyptbigmall?before=23',checked:'2026-10-26'},
+ {name:'دليل مصانع وتجار الملابس بمصر',handle:'gfdegy',category:'ملابس ومصانع',notes:'مصدر لاكتشاف مصانع وتجار الملابس. الأسعار والمخزون وخدمة الشحن تحتاج تأكيد من المورد.',evidence:'https://t.me/s/gfdegy?after=5199',checked:'2026-10-26'}
+];
+function researchPage(){
+ return header('مركز البحث المجاني','ابدأ بحثك في مصر، وافتح نتائج المصادر الأصلية، وبعد المراجعة احفظ الفرصة هنا.')+
+ '<div class="notice">البحث بيفتح المصدر الأصلي في تبويب جديد. الأداة لا تسحب النتائج تلقائيًا، ولا تعرف مبيعات أو أرباح المنافسين.</div>'+
+ '<div class="panel"><form id="freeResearchForm"><label class="field-label" for="researchTerm">اسم المنتج أو المنافس أو موقعه</label><input id="researchTerm" name="term" class="field-input" maxlength="160" placeholder="مثال: مكنسة سيارة، أو اسم متجر، أو example.com" required><div class="field-grid" style="margin-top:16px"><label><span class="field-label">مصدر البحث</span><select name="source" class="field-select"><option value="meta">Meta Ad Library — مصر</option><option value="tiktok">TikTok Creative Center</option><option value="google">Google Ads Transparency — معلن أو موقع</option><option value="telegram">اكتشاف موردين على Telegram عبر Google</option></select></label><div><span class="field-label">ابدأ بالمصدر</span><button class="btn primary" type="submit" style="height:42px;width:100%">افتح البحث ↗</button></div></div></form><p class="muted text-small" style="line-height:2">ميتا: بحث المنتج أو المعلن مع مصر. تيك توك: راجع فلتر المنطقة داخل المصدر، وقد تحتاج تسجيل دخول لعرض المزيد. جوجل: ابحث باسم المعلن أو الدومين وحدد مصر داخل المصدر. تليجرام: نتائج بحث عامة عن قنوات الموردين.</p></div>'+
+ '<div class="settings-grid" style="margin-top:20px"><div class="setting-card"><span class="status-note status-ready">الخطوة ٢</span><h3>احفظ الإعلان اللي راجعته</h3><p>سجل رابط الإعلان والمنتج والمعلن ومدة التشغيل المرصودة. التقييم مؤشر بحث وليس إثبات نجاح المنتج.</p><button class="btn primary" data-action="add" data-kind="ads">+ حفظ إعلان حقيقي</button></div><div class="setting-card"><span class="status-note status-ready">الخطوة ٣</span><h3>راجع مصدر المورد</h3><p>مصادر عامة بروابط أصلية، مع توضيح تخصص كل مصدر وحدود المعلومات المتاحة.</p><button class="btn" data-page="sources">افتح مصادر الموردين</button></div><div class="setting-card"><span class="status-note status-ready">الخطوة ٤</span><h3>احسب جدوى الاختبار</h3><p>بعد تأكيد تكلفة المورد والشحن ونسبة التسليم، احسب أقصى CPA قبل صرف ميزانية إعلان.</p><button class="btn" data-page="calculator">حاسبة الربحية</button></div><div class="setting-card"><span class="status-note">الخصوصية</span><h3>شغلك محفوظ على المتصفح</h3><p>الواجهة منشورة للعامة؛ المحفوظات المحلية تخص المتصفح المستخدم. لا يوجد حساب خاص أو مزامنة بين الأجهزة. صدّر نسخة احتياطية بعد كل جلسة.</p><button class="btn" data-action="export">تصدير النسخة الاحتياطية</button></div></div>';
+}
+function sourcesPage(){
+ return header('مصادر موردين في مصر','قنوات وأدلة عامة اكتشفناها بالبحث. ظهور المصدر لا يعتبر تزكية للمورد أو تأكيدًا لخدمة الدروبشيبينج.')+
+ '<div class="notice">الأسعار والمخزون والشحن والحد الأدنى للطلب غير مؤكدة هنا. راجع المورد قبل تسجيل عرض سعر. آخر مراجعة للمصادر: ٢٦ أكتوبر ٢٠٢٦.</div><div class="supplier-grid">'+
+ supplierSources.map(s=>'<div class="supplier-card"><div class="badges"><span class="badge platform">Telegram</span><span class="badge super">للمراجعة</span></div><h3>'+e(s.name)+'</h3><div class="supplier-product">'+e(s.category)+'</div><p style="line-height:2">'+e(s.notes)+'</p><div class="supplier-actions"><a class="btn primary" href="https://t.me/'+e(s.handle)+'" target="_blank" rel="noopener noreferrer">افتح القناة ↗</a><a class="btn" href="'+e(s.evidence)+'" target="_blank" rel="noopener noreferrer">المنشورات العامة ↗</a><button class="btn" data-action="add" data-kind="suppliers">سجل عرض مورد</button></div></div>').join('')+
+ '</div><div class="panel" style="margin-top:20px"><h3>محتاج تدور على مورد لمنتج معين؟</h3><p class="muted">افتح مركز البحث واختار اكتشاف موردين على Telegram. راجع إن المورد في مصر وإن شروط البيع مناسبة ليك.</p><button class="btn primary" data-page="research">افتح مركز البحث</button></div>';
+}
+window.addEventListener('submit',ev=>{
+ if(ev.target.id!=='freeResearchForm')return;
+ ev.preventDefault();
+ const f=new FormData(ev.target),term=String(f.get('term')||'').trim(),source=f.get('source');
+ if(!term)return;
+ let link;
+ if(source==='meta'){const p=new URLSearchParams({active_status:'active',ad_type:'all',country:'EG',q:term,search_type:'keyword_unordered'});link='https://www.facebook.com/ads/library/?'+p}
+ if(source==='tiktok')link='https://ads.tiktok.com/business/creativecenter/inspiration/topads/pc/en?'+new URLSearchParams({region:'EG',keyword:term});
+ if(source==='google')link='https://adstransparency.google.com/?'+new URLSearchParams({region:'EG',search:term});
+ if(source==='telegram')link='https://www.google.com/search?'+new URLSearchParams({q:'site:t.me '+term+' جملة مورد مصر'});
+ if(link){const opened=window.open(link,'_blank','noopener,noreferrer');toast('راجع النتائج في المصدر الأصلي، وبعدها احفظ الفرصة هنا')}
+});
+
 (async function boot(){try{await reload();render()}catch(err){$('#content').innerHTML=`<div class="panel">تعذر تشغيل نسخة الويب: ${e(err.message)}. جرّب متصفح آخر يسمح بـ Local Storage.</div>`}})();
