@@ -8,3 +8,6 @@ result.json
 *.session-journal
 .env*
 test-results/
+
+__pycache__/
+*.pyc
